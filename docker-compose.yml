@@ -1,40 +1,43 @@
 version: '3'
 
-networks:
-    monblog:
-
 services:
-    # php
-    php8-service:
+    # https://hub.docker.com/r/yappabe/mailcatcher
+    mailcatcher:
+      image: yappabe/mailcatcher
+      container_name: monblog-mailcatcher
+      ports:
+        - 1025:1025
+        - 1080:1080
+
+    # https://hub.docker.com/_/mariadb
+    mariadb:
+      image: mariadb
+      restart: unless-stopped
+      container_name: monblog-mariadb
+      volumes:
+        - ./mysql:/var/lib/mysql
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=root
+        - MYSQL_DATABASE=monblog
+    
+    # php - apache - centos
+    php8-app:
         build:
             context: .
             dockerfile: ./Dockerfile
         container_name: monblog_app
+        depends_on:
+            - mariadb
+            - mailcatcher
         ports:
             - "8000:80"
         volumes:
             - ./web:/var/www/html/
-        networks:
-            - monblog
-            
 
-    # mysql
-    mysql8-service:
-        image: mysql:8
-        container_name: monblog_mysql
-        ports:
-            - "3306:3306"
-        volumes:
-            - ./mysql:/var/lib/mysql
-        command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-        restart: always 
-        environment:
-            MYSQL_USER: root
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_PASSWORD: root
-        networks:
-            - monblog
-        
     adminer:
         image: adminer
         restart: always
