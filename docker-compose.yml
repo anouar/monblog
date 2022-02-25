@@ -1,0 +1,42 @@
+version: '3'
+
+networks:
+    monblog:
+
+services:
+    # php
+    php8-service:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        container_name: monblog_app
+        ports:
+            - "8000:80"
+        volumes:
+            - ./web:/var/www/html/monblog
+        networks:
+            - monblog
+            
+
+    # mysql
+    mysql8-service:
+        image: mysql:8
+        container_name: monblog_mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql:/var/lib/mysql
+        command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        restart: always 
+        environment:
+            MYSQL_USER: root
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
+        networks:
+            - monblog
+        
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
