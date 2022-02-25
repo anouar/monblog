@@ -13,7 +13,7 @@ services:
         ports:
             - "8000:80"
         volumes:
-            - ./web:/var/www/html/monblog
+            - ./web:/var/www/html/
         networks:
             - monblog
             
