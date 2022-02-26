@@ -13,7 +13,7 @@ services:
     mariadb:
       image: mariadb
       restart: unless-stopped
-      container_name: monblog-mariadb
+      container_name: monblog_mariadb
       volumes:
         - ./mysql:/var/lib/mysql
       ports:
@@ -23,7 +23,12 @@ services:
         - MYSQL_USER=root
         - MYSQL_PASSWORD=root
         - MYSQL_DATABASE=monblog
-    
+    node:
+      build: node
+      container_name: monblog_node
+      volumes:
+        - ./web:/var/www/html/
+      command: bash -c "yarn && yarn watch"
     # php - apache - centos
     php8-app:
         build:
