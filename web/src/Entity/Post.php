@@ -2,13 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ApiResource(
+collectionOperations: ['get' => ['normalization_context' => ['groups' => 'post:list']]],
+itemOperations: ['get' => ['normalization_context' => ['groups' => 'post:item']]],
+order: ['createdAt' => 'DESC'],
+paginationEnabled: false
+)]
 class Post
 {
     #[ORM\Id]
@@ -17,6 +26,7 @@ class Post
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['post:list', 'post:item'])]
     #[Assert\NotBlank]
     #[Assert\Length(
         max: 100,
@@ -25,9 +35,11 @@ class Post
     private $title;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['post:list', 'post:item'])]
     private $published = true;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['post:list', 'post:item'])]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -39,9 +51,10 @@ class Post
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
     #[Assert\Length(
-        max: 500,
+        max: 2000,
         maxMessage: 'le nombre de caractère du Content dépasse {{ limit }} caractères.',
     )]
+    #[Groups(['post:list', 'post:item'])]
     private $content;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]

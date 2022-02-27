@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,11 +11,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get'=> ['normalization_context' => ['groups' => 'comment:list']],
+        'post'],
+    itemOperations: [
+        'put' ,
+        'delete'
+    ],
+)]
 class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['comment:list', 'comment:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
@@ -22,13 +34,16 @@ class Comment
         max: 100,
         maxMessage: 'le nombre de caractère du titre dépasse {{ limit }} caractères.',
     )]
+    #[Groups(['comment:list', 'comment:item'])]
     private $title;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['comment:list', 'comment:item'])]
     private $published = true;
 
     #[ORM\Column(type: 'datetime')]
     #[Assert\NotBlank]
+    #[Groups(['comment:list', 'comment:item'])]
     private $createdAt;
 
     #[ORM\Column(type: 'text')]
@@ -41,6 +56,7 @@ class Comment
 
     #[ORM\ManyToOne(targetEntity: post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comment:list', 'comment:item'])]
     private $post;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
@@ -50,6 +66,8 @@ class Comment
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comment:list', 'comment:item'])]
     private $user;
 
     public function __construct()

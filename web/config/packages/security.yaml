@@ -15,8 +15,8 @@ security:
         main:
             lazy: true
             logout:
-                path: /logout
-                target: /login
+                path: app_logout
+                target: app_main
 
             guard:
                 authenticators:

@@ -2,14 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(
+    collectionOperations: ['get' => ['normalization_context' => ['groups' => 'user:list']]],
+    itemOperations: ['get' => ['normalization_context' => ['groups' => 'user:item']]],
+    order: ['createdAt' => 'DESC'],
+    paginationEnabled: false
+)]
 class User implements UserInterface
 {
     #[ORM\Id]
@@ -19,14 +27,17 @@ class User implements UserInterface
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
+    #[Groups(['user:list', 'user:item'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
+    #[Groups(['user:list', 'user:item'])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
+    #[Groups(['user:list', 'user:item'])]
     private $username;
 
     #[ORM\Column(type: 'string', length: 100)]
@@ -34,24 +45,30 @@ class User implements UserInterface
         message: 'L\'Email {{ value }} n\'est pas valide.',
     )]
     #[Assert\NotBlank]
+    #[Groups(['user:list', 'user:item'])]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:list', 'user:item'])]
     private $password;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(['user:list', 'user:item'])]
     private $roles = [];
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(
         message: 'Veuillez saisir une valeur.',
     )]
+    #[Groups(['user:list', 'user:item'])]
     private $avatar;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
+    #[Groups(['user:list', 'user:item'])]
     private $posts;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
+    #[Groups(['user:list', 'user:item'])]
     private $comments;
 
     public function __construct()
