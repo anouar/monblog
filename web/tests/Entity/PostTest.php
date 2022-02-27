@@ -10,11 +10,17 @@ class PostTest extends KernelTestCase
 {
     private const TITLE_101_CHARCTER = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie';
     private const LENGTH_TITLE_CONSTRAINT_MESSAGE = 'le nombre de caractère du titre dépasse 100 caractères.';
-    private const CONTENT_501_CHARACTER = 'ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+    private const CONTENT_1501_CHARACTER = 'ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
 ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
 ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
-ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspice';
-    private const LENGTH_CONTENT_CONSTRAINT_MESSAGE = 'le nombre de caractère du Content dépasse 500 caractères.';
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspice ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspice ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
+ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspi';
+    private const LENGTH_CONTENT_CONSTRAINT_MESSAGE = 'le nombre de caractère du Content dépasse 1500 caractères.';
 
     private ValidatorInterface $validator;
 
@@ -77,9 +83,9 @@ ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolore
     public function testNotValidDescription()
     {
         $this->assertHasErrors($this->getEntity()->setContent(''), 1);
-        //more than 500 character
+        //more than 1500 character
         $post = $this->getEntity();
-        $this->assertHasErrors($post->setContent(self::CONTENT_501_CHARACTER), 1);
+        $this->assertHasErrors($post->setContent(self::CONTENT_1501_CHARACTER), 1);
         $errors = $this->validator->validate($post);
         $this->assertEquals(self::LENGTH_CONTENT_CONSTRAINT_MESSAGE, $errors[0]->getMessage());
     }

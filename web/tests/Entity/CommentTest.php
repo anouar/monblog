@@ -8,8 +8,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CommentTest extends KernelTestCase
 {
-    private const TITLE_101_CHARCTER = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie';
-    private const NOT_BLANK_CONSTRAINT_MESSAGE = 'Veuillez saisir une valeur.';
     private const LENGTH_TITLE_CONSTRAINT_MESSAGE = 'le nombre de caractère du titre dépasse 100 caractères.';
     private const CONTENT_501_CHARACTER = 'ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
 ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,Sed ut perspiciatie
@@ -28,8 +26,7 @@ ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolore
     {
         $comment = new Comment();
 
-        $comment->setTitle('Sed ut perspiciatis unde omnis iste natus error sit voluptatem')
-                ->setContent('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
+        $comment->setContent('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
                 totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.')
                ->setCreatedAt(new \DateTime());
 
@@ -55,19 +52,6 @@ ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolore
     public function testValidEntity()
     {
         $this->assertHasErrors($this->getEntity(), 0);
-    }
-
-    /**
-     * test if not valid Title
-     */
-    public function testNotValidTitle()
-    {
-        $this->assertHasErrors($this->getEntity()->setTitle(''), 1);
-        //more than 100 character
-        $comment = $this->getEntity();
-        $this->assertHasErrors($comment->setTitle(self::TITLE_101_CHARCTER), 1);
-        $errors = $this->validator->validate($comment);
-        $this->assertEquals(self::LENGTH_TITLE_CONSTRAINT_MESSAGE, $errors[0]->getMessage());
     }
 
     /**
