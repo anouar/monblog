@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <div class="col-md-9">
+        {% for item in posts %}
+        <div class="row">
+            <div class="col-md-12 post">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>
+                            <strong><a href="{{ url( 'app_blog_id' , {'id' : item.id}) }}" class="post-title">{{ item.title }}</a></strong></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 post-header-line">
+                        <span class="glyphicon glyphicon-user"></span>by <a href="#">{{ item.user.firstname ~ ' ' ~  item.user.lastname }}</a> | <span class="glyphicon glyphicon-calendar">
+                            </span>{{ item.createdAt | date("d/m/Y H:i")}} <span class="glyphicon glyphicon-comment">
+                    </div>
+                </div>
+                <div class="row post-content">
+                    <div class="col-md-3">
+                        <a href="#">
+                            <img src="{{ item.image }}" alt="" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="col-md-9">
+                        <p>
+                            {{ item.content |striptags|slice(0, 500) ~ '...' }}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="navigation">
+            {{ knp_pagination_render(posts) }}
+        </div>
+
+    </div>
+    <div class="col-md-3">
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
