@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ApiResource(
-collectionOperations: ['get' => ['normalization_context' => ['groups' => 'post:list']]],
-itemOperations: ['get' => ['normalization_context' => ['groups' => 'post:item']]],
-order: ['createdAt' => 'DESC'],
-paginationEnabled: false
+    collectionOperations: ['get' => ['normalization_context' => ['groups' => 'post:list']]],
+    itemOperations: ['get' => ['normalization_context' => ['groups' => 'post:item']]],
+    order: ['createdAt' => 'DESC'],
+    paginationEnabled: false
 )]
 class Post
 {
@@ -51,7 +51,7 @@ class Post
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
     #[Assert\Length(
-        max: 2000,
+        max: 1500,
         maxMessage: 'le nombre de caractère du Content dépasse {{ limit }} caractères.',
     )]
     #[Groups(['post:list', 'post:item'])]

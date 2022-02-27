@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ApiResource(
     collectionOperations: ['get' => ['normalization_context' => ['groups' => 'user:list']]],
     itemOperations: ['get' => ['normalization_context' => ['groups' => 'user:item']]],
-    order: ['createdAt' => 'DESC'],
+    order: ['id' => 'DESC'],
     paginationEnabled: false
 )]
 class User implements UserInterface
@@ -64,11 +64,9 @@ class User implements UserInterface
     private $avatar;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
-    #[Groups(['user:list', 'user:item'])]
     private $posts;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
-    #[Groups(['user:list', 'user:item'])]
     private $comments;
 
     public function __construct()

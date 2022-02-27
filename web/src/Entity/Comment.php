@@ -14,7 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     collectionOperations: [
         'get'=> ['normalization_context' => ['groups' => 'comment:list']],
-        'post'],
+        'post' => [
+            "controller"=> "App\Controller\Api\CommentCreateController::class",
+            "denormalization_context" => ["groups" => ['comment:item']]
+        ]],
     itemOperations: [
         'put' ,
         'delete'
@@ -25,17 +28,8 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['comment:list', 'comment:item'])]
+    #[Groups(['comment:list'])]
     private $id;
-
-    #[ORM\Column(type: 'string', length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(
-        max: 100,
-        maxMessage: 'le nombre de caractère du titre dépasse {{ limit }} caractères.',
-    )]
-    #[Groups(['comment:list', 'comment:item'])]
-    private $title;
 
     #[ORM\Column(type: 'boolean')]
     #[Groups(['comment:list', 'comment:item'])]
@@ -52,9 +46,10 @@ class Comment
         max: 500,
         maxMessage: 'le nombre de caractère du Content dépasse {{ limit }} caractères.',
     )]
+    #[Groups(['comment:list', 'comment:item'])]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: post::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['comment:list', 'comment:item'])]
     private $post;
