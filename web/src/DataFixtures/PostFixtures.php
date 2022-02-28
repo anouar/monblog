@@ -7,14 +7,16 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class PostFixtures extends Fixture
 {
     protected $faker;
-
-    public function __construct()
+    protected $encoder;
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->faker = Factory::create('fr_FR');
+        $this->encoder = $encoder;
     }
 
     public function load(ObjectManager $manager)
@@ -28,6 +30,10 @@ class PostFixtures extends Fixture
             $users[$i]->setEmail($this->faker->email);
             $users[$i]->setAvatar("https://placeimg.com/60/60/people/sepia");
             $users[$i]->setRoles(['ROLE_USER']);
+            $users[$i]->setPassword($this->encoder->hashPassword(
+                $users[$i],
+                'test'
+            ));
             $manager->persist($users[$i]);
         }
 

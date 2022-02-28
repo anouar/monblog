@@ -84,7 +84,7 @@ class GoogleAuthenticator extends SocialAuthenticator
     }
 
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey):RedirectResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
