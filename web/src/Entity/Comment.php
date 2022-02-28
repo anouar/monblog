@@ -9,18 +9,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\CommentController;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
     collectionOperations: [
-        'get'=> ['normalization_context' => ['groups' => 'comment:list']],
+        'get'=> ['path' => '/post/comment', 'normalization_context' => ['groups' => 'comment:list']],
         'post' => [
-            "controller"=> "App\Controller\Api\CommentCreateController::class",
-            "denormalization_context" => ["groups" => ['comment:item']]
+            'method' => 'POST',
+            'path' => '/post/comment',
+            "status" => 201,
+            'controller'=> CommentController::class,
+            'denormalization_context' => ['groups' => ['comment:item']]
+
         ]],
     itemOperations: [
-        'put' ,
-        'delete'
+        'get',
+        'PUT',
+        'DELETE'
     ],
 )]
 class Comment
@@ -55,6 +61,7 @@ class Comment
     private $post;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
+    #[Groups(['comment:list', 'comment:item'])]
     private $parent;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
@@ -62,7 +69,6 @@ class Comment
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['comment:list', 'comment:item'])]
     private $user;
 
     public function __construct()
@@ -73,18 +79,6 @@ class Comment
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getPublished(): ?bool
