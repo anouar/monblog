@@ -1,6 +1,6 @@
 # mon BLOG
 
-#### Environnement docker: (centos 7 / php 8 / apache / mariadb / nodeJS(webEncore)) (voir docker-compose.yml)
+#### Environnement docker: (centos 7 / php 8 / apache / mariadb / node(webEncore)) (voir docker-compose.yml)
 
 ```shell 
 docker-compose up -d
