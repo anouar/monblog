@@ -24,6 +24,10 @@ php bin/console doctrine:fixtures:load
 ```shell 
 php bin/console lexik:jwt:generate-keypair   
 ```
+##### TEST unitaire
+```shell 
+php ./vendor/bin/phpunit tests/
+```
 
 ```shell 
 Le site est accessible en local sous l'url suivante:
